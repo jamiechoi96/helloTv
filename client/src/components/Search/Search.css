@@ -25,18 +25,22 @@
   margin-right: 10px;
 }
 
-.search-bar input:focus {
-  outline: 2px solid #ED174D;
-}
+
 
 .search-bar .search-button {
   background-color: #111;
   border: none;
   color: white;
-  padding: 10px 15px;
-  font-size: 16px;
-  border-radius: 4px;
+  padding: 12px;
+  font-size: 24px;
+  border-radius: 25px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-left: 10px;
 }
 
 .search-bar .search-button:hover {
@@ -109,4 +113,35 @@
   margin-top: 10px;
   font-size: 14px;
   color: #fff;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 600px;
+  padding: 12px 20px;
+  font-size: 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.search-input:focus {
+  border-color: #e50914;  /* LG HelloTV의 라임 컬러로 변경 */
+  background: rgba(255, 255, 255, 0.1);  /* 포커스 시 배경 살짝 밝게 */
+}
+
+/* 자동완성 배경색 제거 */
+.search-input:-webkit-autofill,
+.search-input:-webkit-autofill:hover,
+.search-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+  transition: background-color 5000s ease-in-out 0s;
 }

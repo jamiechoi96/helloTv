@@ -47,11 +47,14 @@ const Search = () => {
       <div className="search-bar">
         <input
           type="text"
-          placeholder="제목, 장르, 배우로 검색해보세요"
+          className="search-input"
+          placeholder="검색어를 입력하세요..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <button className="search-button"><FiSearch /></button>
+        <button className="search-button">
+          <FiSearch />
+        </button>
       </div>
 
       <div className="genres">

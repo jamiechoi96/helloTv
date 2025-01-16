@@ -21,11 +21,8 @@ const dbConfig = {
 };
 
 // TMDB 설정 추가
-const TMDB_API_KEY = process.env.TMDB_API_KEY; // .env 파일에 추가 필요
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
-
-// 해시값 상수 선언
-const a = "a97ed1db84bc3dc8586b46572d253e86d4771b902b5ee38c64150e13968ff3ad";
 
 // 데이터베이스 연결 테스트
 async function testConnection() {
@@ -54,8 +51,12 @@ async function startServer() {
   app.get("/api/watch-history", async (req, res) => {
     let connection;
     try {
-      const { userHash } = req.query; // URL 쿼리에서 userHash 가져오기
+      const { userHash } = req.query;
+      console.log("\n=== 시청 기록 요청 시작 ===");
+      console.log("요청된 userHash:", userHash);
+
       if (!userHash) {
+        console.log("userHash 누락");
         return res.status(400).json({ error: "userHash가 필요합니다" });
       }
 
@@ -95,6 +96,7 @@ async function startServer() {
 
       console.log("쿼리 결과:", rows);
       res.json(rows);
+      console.log("=== 시청 기록 요청 완료 ===\n");
     } catch (error) {
       console.error("데이터베이스 오류:", error);
       res.status(500).json({

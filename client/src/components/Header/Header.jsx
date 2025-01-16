@@ -22,11 +22,23 @@ const Header = () => {
     };
   }, []);
 
+  const menuPaths = {
+    영화: "/movies",
+    예능: "/entertainment",
+    드라마: "/dramas",
+    "키즈/애니": "/kids",
+  };
+
   const handleMenuClick = (menu) => {
-    if (menu === "영화") navigate("/movies");
-    if (menu === "예능") navigate("/entertainment");
-    if (menu === "드라마") navigate("/dramas");
-    if (menu === "키즈/애니") navigate("/kids");
+    const path = menuPaths[menu];
+    if (path) {
+      navigate(path);
+    }
+  };
+
+  const isActiveMenu = (menu) => {
+    const path = menuPaths[menu];
+    return location.pathname === path;
   };
 
   return (
@@ -44,7 +56,11 @@ const Header = () => {
       <nav className="Nav">
         <ul>
           {["영화", "예능", "드라마", "키즈/애니"].map((menu) => (
-            <li key={menu} onClick={() => handleMenuClick(menu)}>
+            <li
+              key={menu}
+              className={isActiveMenu(menu) ? "active" : ""}
+              onClick={() => handleMenuClick(menu)}
+            >
               {menu}
             </li>
           ))}
@@ -54,9 +70,7 @@ const Header = () => {
         {location.pathname !== "/search" && (
           <FiSearch className="icon" onClick={() => navigate("/search")} />
         )}
-        <Link
-          to={`/mypage?userHash=a97ed1db84bc3dc8586b46572d253e86d4771b902b5ee38c64150e13968ff3ad`}
-        >
+        <Link to="/mypage">
           <FiUser
             className={`icon ${
               location.pathname === "/mypage" ? "active" : ""
