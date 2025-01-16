@@ -1,11 +1,15 @@
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'; // React Router 추가
-import Header from './components/Header/Header.jsx';
-import Home from './components/Main/Home/Home.jsx';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom"; // React Router 추가
+import Header from "./components/Header/Header.jsx";
+import Home from "./components/Main/Home/Home.jsx";
 import MyPage from "./components/Mypage/MyPage.jsx"; // MyPage 컴포넌트 임포트
-import MyPage2 from "./components/Mypage/MyPage2.jsx"; // MyPage2 컴포넌트 임포트
 import Search from "./components/Search/Search.jsx"; // Search 컴포넌트 임포트
-import Footer from "./components/Footer/Footer.jsx"
-import './App.css';
+import Footer from "./components/Footer/Footer.jsx";
+import "./App.css";
 
 // 동적으로 클래스 추가를 위한 컴포넌트
 function Layout() {
@@ -15,16 +19,17 @@ function Layout() {
   return (
     <>
       <Header />
-      <div className={`main ${isHome ? "home-page" : ""}`}> {/* Home 페이지일 때만 추가 클래스 적용 */}
-      <Routes>
-  <Route path="/" element={<Home />} />
-  <Route path="/movies" element={<Home />} />
-  <Route path="/mypage" element={<MyPage />} />  {/* URL 파라미터 제거 */}
-  <Route path="/mypage2" element={<MyPage2 />} />
-  <Route path="/search" element={<Search />} />
-</Routes>
+      <div className={`main ${isHome ? "home-page" : ""}`}>
+        {" "}
+        {/* Home 페이지일 때만 추가 클래스 적용 */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/movies" element={<Home />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/search" element={<Search />} />
+        </Routes>
         <Footer />
-      </div>  
+      </div>
     </>
   );
 }

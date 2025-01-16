@@ -1,27 +1,34 @@
-import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import './MyPage.css';
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import "./MyPage.css";
 
 function MyPage() {
   const [watchHistory, setWatchHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchParams] = useSearchParams();
-  const defaultHash = 'a97ed1db84bc3dc8586b46572d253e86d4771b902b5ee38c64150e13968ff3ad';
-  const hash = searchParams.get('hash') || defaultHash;
+  const hash = searchParams.get("userHash");
 
   useEffect(() => {
     const fetchWatchHistory = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/watch-history?hash=${hash}`);
-        console.log('API 응답:', response);
+        if (!hash) {
+          setError("userHash가 필요합니다");
+          setLoading(false);
+          return;
+        }
+        
+        const response = await fetch(
+          `http://localhost:5001/api/watch-history?userHash=${hash}`
+        );
+        console.log("API 응답:", response);
         const data = await response.json();
-        console.log('받은 데이터:', data);
+        console.log("받은 데이터:", data);
         setWatchHistory(data);
       } catch (error) {
-        console.error('시청 기록 가져오기 오류:', error);
-        setError('오류가 발생했습니다: ' + error.message);
+        console.error("시청 기록 가져오기 오류:", error);
+        setError("오류가 발생했습니다: " + error.message);
       } finally {
         setLoading(false);
       }
@@ -50,21 +57,28 @@ function MyPage() {
         <h2 className="section_title">시청기록</h2>
         <div className="section_content watch-history">
           {watchHistory && watchHistory.length > 0 ? (
-            <div className="watch-history-grid">
-              {watchHistory.map((item) => (
-                <div key={item.sha2_hash} className="watch-history-item">
-                  <div className="poster poster-placeholder">
-                    <span className="title-placeholder">{item.latest_episode}</span>
-                  </div>
-                  <div className="content-info">
-                    <h3>{item.latest_episode}</h3>
-                    <p className="category">{item.category}</p>
-                    <p className="date">{new Date(item.latest_strt_dt).toLocaleDateString()}</p>
-                    <p className="duration">{Math.floor(item.total_use_tms / 60)}분</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <table className="watch-history-table">
+              <thead>
+                <tr>
+                  <th>콘텐츠명</th>
+                  <th>카테고리</th>
+                  <th>시청 날짜</th>
+                  <th>시청 시간</th>
+                </tr>
+              </thead>
+              <tbody>
+                {watchHistory.map((item) => (
+                  <tr key={item.sha2_hash}>
+                    <td>{item.latest_episode}</td>
+                    <td>{item.category}</td>
+                    <td>
+                      {new Date(item.latest_strt_dt).toLocaleDateString()}
+                    </td>
+                    <td>{Math.floor(item.total_use_tms / 60)}분</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           ) : (
             <p>시청 기록이 없습니다.</p>
           )}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FiSearch, FiUser } from "react-icons/fi";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import "./Header.css";
 import WeatherWidget from "./WeatherWidget.jsx";
 
@@ -44,10 +44,7 @@ const Header = () => {
       <nav className="Nav">
         <ul>
           {["영화", "예능", "드라마", "키즈/애니"].map((menu) => (
-            <li
-              key={menu}
-              onClick={() => handleMenuClick(menu)}
-            >
+            <li key={menu} onClick={() => handleMenuClick(menu)}>
               {menu}
             </li>
           ))}
@@ -57,10 +54,15 @@ const Header = () => {
         {location.pathname !== "/search" && (
           <FiSearch className="icon" onClick={() => navigate("/search")} />
         )}
-        <FiUser
-          className={`icon ${location.pathname === "/mypage" ? "active" : ""}`}
-          onClick={() => navigate("/mypage")}
-        />
+        <Link
+          to={`/mypage?userHash=a97ed1db84bc3dc8586b46572d253e86d4771b902b5ee38c64150e13968ff3ad`}
+        >
+          <FiUser
+            className={`icon ${
+              location.pathname === "/mypage" ? "active" : ""
+            }`}
+          />
+        </Link>
         <WeatherWidget />
       </div>
       {!isScrolled && <div className="gradient-banner"></div>}
