@@ -1,71 +1,72 @@
-import React, { useEffect, useState } from "react";
-import axios from "../../axios";
-import "./MyPage.css";
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import './MyPage.css';
 
 function MyPage() {
-  const [user, setUser] = useState(null);
-  const [viewingHistory, setViewingHistory] = useState([]);
-  const sha2Hash = "your_sha2_hash";
+  const [watchHistory, setWatchHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchParams] = useSearchParams();
+  const defaultHash = 'a97ed1db84bc3dc8586b46572d253e86d4771b902b5ee38c64150e13968ff3ad';
+  const hash = searchParams.get('hash') || defaultHash;
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchWatchHistory = async () => {
       try {
-        const response = await axios.get(`/api/user/${sha2Hash}`);
-        setUser(response.data);
+        setLoading(true);
+        const response = await fetch(`/api/watch-history?hash=${hash}`);
+        console.log('API 응답:', response);
+        const data = await response.json();
+        console.log('받은 데이터:', data);
+        setWatchHistory(data);
       } catch (error) {
-        console.error("사용자 정보를 가져오는 중 오류 발생:", error);
+        console.error('시청 기록 가져오기 오류:', error);
+        setError('오류가 발생했습니다: ' + error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const fetchViewingHistory = async () => {
-      try {
-        const response = await axios.get(`/api/user/${sha2Hash}/viewing-history`);
-        setViewingHistory(response.data);
-      } catch (error) {
-        console.error("최근 시청 기록을 가져오는 중 오류 발생:", error);
-      }
-    };
+    fetchWatchHistory();
+  }, [hash]);
 
-    fetchUser();
-    fetchViewingHistory();
-  }, [sha2Hash]);
-
-  if (!user) {
-    return <div>로딩 중...</div>;
-  }
+  if (loading) return <div>데이터를 불러오는 중...</div>;
+  if (error) return <div>오류가 발생했습니다: {error}</div>;
 
   return (
     <div className="mypage">
       <div className="mypage_header">
         <div className="profile_section">
           <div className="profile_icon">
-            <img
-              src="/images/LG_logo.png"
-              alt="LG Logo"
-              className="logo-image"
-            />
+            <span className="profile-placeholder">프로필</span>
           </div>
           <div className="profile_name">
-            <span>{user.name}</span>
+            <span>수정 &gt;</span>
           </div>
         </div>
       </div>
 
       <div className="section">
-        <h2 className="section_title">최근 시청 기록</h2>
-        <div className="section_content">
-          {viewingHistory.length > 0 ? (
-            viewingHistory.map((item, index) => (
-              <div key={index}>
-                <p>카테고리: {item.category}</p>
-                <p>최신 시작 날짜: {item.latest_strt_dt}</p>
-                <p>총 사용 시간: {item.total_use_tms} 분</p>
-                <p>최신 에피소드: {item.latest_episode}</p>
-                <hr />
-              </div>
-            ))
+        <h2 className="section_title">시청기록</h2>
+        <div className="section_content watch-history">
+          {watchHistory && watchHistory.length > 0 ? (
+            <div className="watch-history-grid">
+              {watchHistory.map((item) => (
+                <div key={item.sha2_hash} className="watch-history-item">
+                  <div className="poster poster-placeholder">
+                    <span className="title-placeholder">{item.latest_episode}</span>
+                  </div>
+                  <div className="content-info">
+                    <h3>{item.latest_episode}</h3>
+                    <p className="category">{item.category}</p>
+                    <p className="date">{new Date(item.latest_strt_dt).toLocaleDateString()}</p>
+                    <p className="duration">{Math.floor(item.total_use_tms / 60)}분</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
-            <p>최근 시청 기록이 없습니다.</p>
+            <p>시청 기록이 없습니다.</p>
           )}
         </div>
       </div>
