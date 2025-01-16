@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 16px;
+  padding: 4px 16px;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 25px;
   font-size: 1.1rem;
@@ -37,6 +37,7 @@
 }
 
 .location {
+  font-family: "LGEIHeadlineTTF-Bold";
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.9);
 }
